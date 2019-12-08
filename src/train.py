@@ -2,7 +2,6 @@ import torch
 from utils import readUnlabeledData, train_editor, train_discriminator
 from editor import editor18
 from discriminator import discriminator as disc
-from logger import Logger
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
