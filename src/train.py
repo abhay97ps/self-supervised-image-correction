@@ -1,13 +1,13 @@
 import torch
 from utils import train_discriminator, train_editor
-from pretext import RandomPretextConverter, GrayScalePL, SuperResolutionPL, RandomPatchPL, RealImagePL
+from pretext import RandomPretextConverter
 from editor import editor18
 from discriminator import discriminator as disc
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 
-def train(dataset, batch_size, editor_lr, discriminator_lr, num_of_epochs, l_rec, l_adv, logger):
+def train(dataset, tasks, batch_size, editor_lr, discriminator_lr, num_of_epochs, l_rec, l_adv, logger):
 
     unlabelled_data_loader = torch.utils.data.DataLoader(
         dataset, batch_size=batch_size, shuffle=True)
@@ -31,12 +31,7 @@ def train(dataset, batch_size, editor_lr, discriminator_lr, num_of_epochs, l_rec
     for epoch in range(num_of_epochs):
         for n_batch, real_data in enumerate(unlabelled_data_loader):
             # generate input data from real data
-            input_data = RandomPretextConverter(real_data, tasks=[
-                GrayScalePL,
-                RandomPatchPL,
-                SuperResolutionPL,
-                RealImagePL
-            ]).to(device)
+            input_data = RandomPretextConverter(real_data, tasks).to(device)
             # 1. Train Discriminator
             # Generate fake data
             fake_data = editor(input_data).detach()
