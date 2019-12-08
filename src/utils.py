@@ -1,10 +1,6 @@
 import torch
 
 
-def readUnlabeledData():
-    return 0
-
-
 def real_data_target(size, device):
     '''
     Tensor containing ones, with shape = size

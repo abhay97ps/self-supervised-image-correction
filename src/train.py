@@ -1,15 +1,16 @@
 import torch
-from utils import readUnlabeledData, train_editor, train_discriminator
+from utils import train_discriminator, train_editor
+from pretext import RandomPretextConverter, GrayScalePL, SuperResolutionPL, RandomPatchPL, RealImagePL
 from editor import editor18
 from discriminator import discriminator as disc
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
-def train(batch_size, editor_lr, discriminator_lr, num_of_epochs, l_rec, l_adv, logger):
-    # load data
-    data = readUnlabeledData()
+
+def train(dataset, batch_size, editor_lr, discriminator_lr, num_of_epochs, l_rec, l_adv, logger):
+
     unlabelled_data_loader = torch.utils.data.DataLoader(
-        data, batch_size=batch_size, shuffle=True)
+        dataset, batch_size=batch_size, shuffle=True)
     num_of_batches = len(unlabelled_data_loader)
 
     # import the model
@@ -29,10 +30,16 @@ def train(batch_size, editor_lr, discriminator_lr, num_of_epochs, l_rec, l_adv, 
 
     for epoch in range(num_of_epochs):
         for n_batch, real_data in enumerate(unlabelled_data_loader):
-
+            # generate input data from real data
+            input_data = RandomPretextConverter(real_data, tasks=[
+                GrayScalePL,
+                RandomPatchPL,
+                SuperResolutionPL,
+                RealImagePL
+            ]).to(device)
             # 1. Train Discriminator
             # Generate fake data
-            fake_data = editor(real_data).detach()
+            fake_data = editor(input_data).detach()
             # Train D
             d_error, d_pred_real, d_pred_fake = train_discriminator(
                 discriminator=discriminator,
@@ -45,7 +52,7 @@ def train(batch_size, editor_lr, discriminator_lr, num_of_epochs, l_rec, l_adv, 
 
             # 2. Train Editor
             # Generate fake data
-            fake_data = editor(real_data)
+            fake_data = editor(input_data)
             # Train E
             e_error = train_editor(
                 discriminator=discriminator,
@@ -63,7 +70,7 @@ def train(batch_size, editor_lr, discriminator_lr, num_of_epochs, l_rec, l_adv, 
 
             # Display Progress
             logger.display_status(epoch, num_of_epochs, n_batch,
-                                num_of_batches, d_error, e_error, d_pred_real, d_pred_fake)
+                                  num_of_batches, d_error, e_error, d_pred_real, d_pred_fake)
 
             # Model Checkpoints
             logger.save_models(editor, discriminator, epoch)
