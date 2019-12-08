@@ -1,13 +1,14 @@
 from torchvision import models
 import torch.nn as nn
 
-def discriminator(model_name='resnet18',pretrained=True, **kwargs):
+
+def discriminator(model_name='resnet18', pretrained=True, **kwargs):
   # get pretrained model
   if model_name == 'resnet18':
       model_pre = models.resnet18(pretrained)
   elif model_name == 'resnet34':
       model_pre = models.resnet34(pretrained)
-  elif model_nam e == 'resnet50':
+  elif model_name == 'resnet50':
       model_pre = models.resnet50(pretrained)
   elif model_name == 'resnet101':
       model_pre = models.resnet101(pretrained)
@@ -25,6 +26,6 @@ def discriminator(model_name='resnet18',pretrained=True, **kwargs):
                         nn.Linear(num_features, 256),
                         nn.ReLU(),
                         nn.Dropout(0.25),
-                        nn.Linear(256, 2),
-                        nn.LogSoftmax(dim=1))
+                        nn.Linear(256, 2))
+                        # nn.LogSoftmax(dim=1))
   return model_pre
