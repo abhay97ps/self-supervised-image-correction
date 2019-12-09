@@ -17,7 +17,8 @@ class Logger:
         self.data_name = data_name
 
         self.comment = '{}_{}'.format(model_name, data_name)
-        self.data_subdir = '{}/{}/{}'.format(model_name, data_name, experiment_num)
+        self.data_subdir = '{}/{}/{}'.format(model_name,
+                                             data_name, experiment_num)
 
         # TensorBoard
         self.writer = SummaryWriter(comment=self.comment)
@@ -49,7 +50,7 @@ class Logger:
             d_pred_real.mean(), d_pred_fake.mean()))
 
     def save_models(self, editor, discriminator, epoch):
-        out_dir = './model{}'.format(self.data_subdir)
+        out_dir = 'model/{}'.format(self.data_subdir)
         Logger._make_dir(out_dir)
         torch.save(editor.state_dict(),
                    '{}/E_epoch_{}'.format(out_dir, epoch))

@@ -59,8 +59,8 @@ def RandomPatchPL(original, patch_size=10, channels="RGB", fill_value=255):
 def SuperResolutionPL(image, scale=0.1):
     img = copy.deepcopy(image)
     N, M, _ = img.shape
-    downscaled_img = rescale(img, scale, anti_aliasing=True)
-    upscaled_img = resize(downscaled_img, (N, M), anti_aliasing=False)
+    downscaled_img = rescale(img, scale, anti_aliasing=True, multichannel=True)
+    upscaled_img = resize(downscaled_img, (N, M), anti_aliasing=False, mode='constant')
     return upscaled_img
 
 

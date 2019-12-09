@@ -1,4 +1,39 @@
+# independent file to read the binary file and generate image folder
+
+import os
+import sys
+import tarfile
+import errno
+import numpy as np
+import matplotlib.pyplot as plt
+
+try:
+    from imageio import imsave
+except:
+    from scipy.misc import imsave
 
 
-def load_unlabelled_data():
-    return 0
+def read_all_images(path):
+    with open(path, 'rb') as f:
+        everything = np.fromfile(f, dtype=np.uint8)
+        images = np.reshape(everything, (-1, 3, 96, 96))
+        return np.transpose(images, (0, 3, 2, 1))
+
+
+def save_unlabelled_images(images):
+    i = 0
+    for image in images:
+        dir = './../data/unlabeled/'
+        try:
+            os.makedirs(dir, exist_ok=True)
+        except OSError as exc:
+            if exc.errno == errno.EEXIST:
+                pass
+        filename = dir + str(i)
+        imsave("%s.png" % filename, image, format="png")
+        i += 1
+
+
+data_path = './../data/stl10_binary/unlabeled_X.bin'
+images = read_all_images(data_path)
+save_unlabelled_images(images)

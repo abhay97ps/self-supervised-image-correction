@@ -10,7 +10,7 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 def train(dataset, tasks, batch_size, editor_lr, discriminator_lr, num_of_epochs, l_rec, l_adv, logger):
 
     unlabelled_data_loader = torch.utils.data.DataLoader(
-        dataset, batch_size=batch_size, shuffle=True)
+        dataset, batch_size=batch_size, shuffle=True, num_workers=4)
     num_of_batches = len(unlabelled_data_loader)
 
     # import the model
@@ -29,7 +29,8 @@ def train(dataset, tasks, batch_size, editor_lr, discriminator_lr, num_of_epochs
     # train the context encoder
 
     for epoch in range(num_of_epochs):
-        for n_batch, real_data in enumerate(unlabelled_data_loader):
+        for n_batch, data in enumerate(unlabelled_data_loader):
+            real_data, _ = data
             # generate input data from real data
             input_data = RandomPretextConverter(real_data, tasks).to(device)
             # 1. Train Discriminator
@@ -40,8 +41,8 @@ def train(dataset, tasks, batch_size, editor_lr, discriminator_lr, num_of_epochs
                 discriminator=discriminator,
                 optimizer=discriminator_optimizer,
                 loss=adversarial_loss,
-                real_data=real_data,
-                fake_data=fake_data,
+                real_data=real_data.to(device),
+                fake_data=fake_data.to(device),
                 device=device
             )
 
@@ -56,8 +57,8 @@ def train(dataset, tasks, batch_size, editor_lr, discriminator_lr, num_of_epochs
                 l_adv=l_adv,
                 reconstruction_loss=reconstruction_loss,
                 adversarial_loss=adversarial_loss,
-                real_data=real_data,
-                fake_data=fake_data,
+                real_data=real_data.to(device),
+                fake_data=fake_data.to(device),
                 device=device
             )
             # Log error

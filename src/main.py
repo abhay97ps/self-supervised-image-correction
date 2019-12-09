@@ -1,7 +1,8 @@
+import torch
+import torchvision
 import sys
 from logger import Logger
 from train import train
-from data import load_unlabelled_data
 from pretext import GrayScalePL, SuperResolutionPL, RandomPatchPL, RealImagePL
 
 # options
@@ -14,7 +15,9 @@ l_adv = 0.001
 logger = Logger(model_name='CENC', data_name='STL-10', experiment_num='exp1')
 
 # load data
-dataset = load_unlabelled_data()
+transform = torchvision.transforms.ToTensor()
+data_dir = 'data/'
+dataset = torchvision.datasets.ImageFolder(data_dir, transform)
 
 # define tasks to work on
 tasks = [
