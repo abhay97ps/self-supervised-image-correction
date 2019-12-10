@@ -29,8 +29,7 @@ def train(dataset, tasks, batch_size, editor_lr, discriminator_lr, num_of_epochs
     # train the context encoder
 
     for epoch in range(num_of_epochs):
-        for n_batch, data in enumerate(unlabelled_data_loader):
-            real_data, _ = data
+        for n_batch, (real_data, _) in enumerate(unlabelled_data_loader):
             # generate input data from real data
             input_data = RandomPretextConverter(real_data, tasks).to(device)
             # 1. Train Discriminator
@@ -64,9 +63,11 @@ def train(dataset, tasks, batch_size, editor_lr, discriminator_lr, num_of_epochs
             # Log error
             logger.log(d_error, e_error, epoch, n_batch, num_of_batches)
 
-            # Display Progress
-            logger.display_status(epoch, num_of_epochs, n_batch,
-                                  num_of_batches, d_error, e_error, d_pred_real, d_pred_fake)
+            # Display Progress and generate and save test images
+            # num_of_batches/x = 10
+            if (n_batch) % (num_of_batches//10) == 0:
+                logger.display_status(epoch, num_of_epochs, n_batch,
+                                      num_of_batches, d_error, e_error, d_pred_real, d_pred_fake)
 
             # Model Checkpoints
             logger.save_models(editor, discriminator, epoch)
