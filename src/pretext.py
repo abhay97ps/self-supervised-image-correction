@@ -56,7 +56,7 @@ def RandomPatchPL(original, patch_size=10, channels="RGB", fill_value=255):
 # generate low resolution images for training data
 # image is downscaled and upscaled to same size to reduce resolution
 # parameter scale is used to downsample
-def SuperResolutionPL(image, scale=0.1):
+def SuperResolutionPL(image, scale=0.5):
     img = copy.deepcopy(image)
     N, M, _ = img.shape
     downscaled_img = rescale(img, scale, anti_aliasing=True, multichannel=True)
