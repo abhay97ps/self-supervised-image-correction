@@ -6,7 +6,7 @@
 #SBATCH --mem=100000
 #SBATCH --job-name=aps647
 #SBATCH --mail-user=aps647@nyu.edu
-#SBATCH --output=slurm_%j.out
+#SBATCH --output=exp2.out
 
 
 . ~/.bashrc

@@ -1,0 +1,30 @@
+Epoch: [0/200], Batch Num: [0/1000]
+Discriminator Loss: 1.4017, Editor Loss: 1.5979
+D(x): 0.5072, D(G(z)): 0.5042
+Epoch: [0/200], Batch Num: [100/1000]
+Discriminator Loss: 1.2886, Editor Loss: 0.6598
+D(x): 0.5344, D(G(z)): 0.4753
+Epoch: [0/200], Batch Num: [200/1000]
+Discriminator Loss: 1.1721, Editor Loss: 0.6888
+D(x): 0.5655, D(G(z)): 0.4372
+Epoch: [0/200], Batch Num: [300/1000]
+Discriminator Loss: 1.0675, Editor Loss: 0.6570
+D(x): 0.6069, D(G(z)): 0.4101
+Epoch: [0/200], Batch Num: [400/1000]
+Discriminator Loss: 0.9914, Editor Loss: 0.6397
+D(x): 0.6631, D(G(z)): 0.4005
+Epoch: [0/200], Batch Num: [500/1000]
+Discriminator Loss: 0.8909, Editor Loss: 0.5886
+D(x): 0.7029, D(G(z)): 0.3741
+Epoch: [0/200], Batch Num: [600/1000]
+Discriminator Loss: 0.8431, Editor Loss: 0.5813
+D(x): 0.6603, D(G(z)): 0.2857
+Epoch: [0/200], Batch Num: [700/1000]
+Discriminator Loss: 0.7264, Editor Loss: 0.6096
+D(x): 0.7342, D(G(z)): 0.2908
+Epoch: [0/200], Batch Num: [800/1000]
+Discriminator Loss: 0.7546, Editor Loss: 0.6028
+D(x): 0.7513, D(G(z)): 0.2969
+Epoch: [0/200], Batch Num: [900/1000]
+Discriminator Loss: 0.6821, Editor Loss: 0.5752
+D(x): 0.7643, D(G(z)): 0.2739
