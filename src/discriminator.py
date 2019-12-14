@@ -17,15 +17,18 @@ def discriminator(model_name='resnet18', pretrained=True, **kwargs):
     else:
         raise ValueError('Unknown model type')
     # Freeze trained model weights for parameter transfer learning
-    for param in model_pre.parameters():
-        param.requires_grad = False
+    # for param in model_pre.parameters():
+    #    param.requires_grad = False
     # Add custom classifier:
     num_features = model_pre.fc.in_features
-# model.fc = SigmoidLinear(num_features, num_classes)
+    # model.fc = SigmoidLinear(num_features, num_classes)
+    # model_pre.fc = nn.Sequential(
+    #    nn.Linear(num_features, 256),
+    #    nn.ReLU(),
+    #    nn.Dropout(0.25),
+    #    nn.Linear(256, 1),
+    #    nn.Sigmoid())
     model_pre.fc = nn.Sequential(
-        nn.Linear(num_features, 256),
-        nn.ReLU(),
-        nn.Dropout(0.25),
-        nn.Linear(256, 1),
+        nn.Linear(num_features, 1),
         nn.Sigmoid())
     return model_pre
