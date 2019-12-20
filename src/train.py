@@ -18,9 +18,8 @@ def train(dataset, tasks, batch_size, editor_lr, discriminator_lr, num_of_epochs
     discriminator = disc().to(device)
 
     # optimizer
-    editor_optimizer = torch.optim.Adam(editor.parameters(), lr=editor_lr)
-    discriminator_optimizer = torch.optim.Adam(
-        discriminator.parameters(), lr=discriminator_lr)
+    editor_optimizer = torch.optim.Adam(editor.parameters(), lr=editor_lr, betas=(0.5, 0.999))
+    discriminator_optimizer = torch.optim.Adam(discriminator.parameters(), lr=discriminator_lr, betas=(0.5, 0.999))
 
     # loss func
     reconstruction_loss = torch.nn.MSELoss()
@@ -31,23 +30,23 @@ def train(dataset, tasks, batch_size, editor_lr, discriminator_lr, num_of_epochs
     for epoch in range(num_of_epochs):
         for n_batch, (real_data, _) in enumerate(unlabelled_data_loader):
             # generate input data from real data
-            input_data = RandomPretextConverter(real_data, tasks).to(device)
+            input_data = RandomPretextConverter(real_data.clone(), tasks).to(device)
             # 1. Train Discriminator
             # Generate fake data
-            fake_data = editor(input_data).detach()
+            fake_data = editor(input_data.clone())
             # Train D
             d_error, d_pred_real, d_pred_fake = train_discriminator(
                 discriminator=discriminator,
                 optimizer=discriminator_optimizer,
                 loss=adversarial_loss,
-                real_data=real_data.to(device),
+                real_data=real_data.clone().to(device),
                 fake_data=fake_data.to(device),
                 device=device
             )
 
             # 2. Train Editor
             # Generate fake data
-            fake_data = editor(input_data)
+            fake_data = editor(input_data.clone())
             # Train E
             e_error = train_editor(
                 discriminator=discriminator,
@@ -56,7 +55,7 @@ def train(dataset, tasks, batch_size, editor_lr, discriminator_lr, num_of_epochs
                 l_adv=l_adv,
                 reconstruction_loss=reconstruction_loss,
                 adversarial_loss=adversarial_loss,
-                real_data=real_data.to(device),
+                real_data=real_data.clone().to(device),
                 fake_data=fake_data.to(device),
                 device=device
             )

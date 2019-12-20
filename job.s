@@ -6,9 +6,9 @@
 #SBATCH --mem=100000
 #SBATCH --job-name=aps647
 #SBATCH --mail-user=aps647@nyu.edu
-#SBATCH --output=exp2.out
+#SBATCH --output=eval.out
 
 
 . ~/.bashrc
 source activate aps647
-python src/main.py
+python src/evaluate.py

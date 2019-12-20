@@ -25,8 +25,8 @@ def train_editor(discriminator, optimizer, l_rec, l_adv, reconstruction_loss, ad
     prediction = discriminator(fake_data)
     # Calculate error and backpropagate
     # error is reconstruction + adversarial
-    error = l_rec * reconstruction_loss(fake_data, real_data) + \
-        l_adv * adversarial_loss(prediction, real_data_target(N, device))
+    error = (torch.tensor(l_rec) * reconstruction_loss(fake_data, real_data) +
+             torch.tensor(l_adv) * adversarial_loss(prediction, real_data_target(N, device))).to(device)
     error.backward()
     # Update weights with gradients
     optimizer.step()
@@ -41,18 +41,17 @@ def train_discriminator(discriminator, optimizer, loss, real_data, fake_data, de
 
     # 1.1 Train on Real Data
     prediction_real = discriminator(real_data)
-    # Calculate error and backpropagate
-    error_real = loss(prediction_real, real_data_target(N, device))
-    error_real.backward()
-
     # 1.2 Train on Fake Data
     prediction_fake = discriminator(fake_data)
+
     # Calculate error and backpropagate
-    error_fake = loss(prediction_fake, fake_data_target(N, device))
-    error_fake.backward()
+    error = loss(prediction_real, real_data_target(N, device)) + \
+        loss(prediction_fake, fake_data_target(N, device))
+
+    error.backward()
 
     # 1.3 Update weights with gradients
     optimizer.step()
 
     # Return error and predictions for real and fake inputs
-    return error_real + error_fake, prediction_real, prediction_fake
+    return error, prediction_real, prediction_fake

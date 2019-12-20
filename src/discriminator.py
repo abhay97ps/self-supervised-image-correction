@@ -2,7 +2,7 @@ from torchvision import models
 import torch.nn as nn
 
 
-def discriminator(model_name='resnet18', pretrained=True, **kwargs):
+def discriminator(model_name='resnet18', pretrained=False, **kwargs):
     # get pretrained model
     if model_name == 'resnet18':
         model_pre = models.resnet18(pretrained)

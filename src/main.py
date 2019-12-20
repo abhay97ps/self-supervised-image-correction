@@ -8,12 +8,12 @@ from pretext import GrayScalePL, SuperResolutionPL, RandomPatchPL, RealImagePL
 
 # options
 batch_size = 100
-editor_lr = 2e-3
-discriminator_lr = 1e-3
-num_of_epochs = 100
-l_rec = 0.99
-l_adv = 0.01
-logger = Logger(model_name='CENC', data_name='STL-10', experiment_num='exp3')
+editor_lr = 0.005
+discriminator_lr = 0.0005
+num_of_epochs = 200
+l_rec = 0.999
+l_adv = 0.001
+logger = Logger(model_name='CENC', data_name='STL-10', experiment_num='exp6')
 
 # load data
 transform = transforms.Compose([
